@@ -20,10 +20,10 @@ export default function AuthContainer() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-200 bg-white shadow-lg rounded-xl flex overflow-hidden">
+    <div className="h-full overflow-hidden  flex items-center  justify-center bg-white">
+      <div className="w-full min-h-screen bg-white shadow-lg  flex items-center overflow-hidden">
         {/* LEFT SIDE DESIGN PANEL */}
-        <div className="w-1/2 bg-blue-600 text-white p-8 flex flex-col justify-center">
+        <div className="w-1/2 bg-blue-600 border-4 h-screen text-white p-8 flex flex-col justify-center">
           <h2 className="text-2xl font-bold">
             {role === "patient" ? "Patient Portal" : "Hospital Portal"}
           </h2>
@@ -33,7 +33,7 @@ export default function AuthContainer() {
         </div>
 
         {/* RIGHT SIDE FORM PANEL */}
-        <div className="w-1/2 p-8">
+        <div className="w-1/3 p-8 mx-auto h-fit">
           <RoleToggle role={role} setRole={setRole} />
           <ModeToggle mode={mode} setMode={setMode} />
 

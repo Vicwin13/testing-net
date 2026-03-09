@@ -15,7 +15,7 @@ const switzer = localFont({
 });
 
 const geistPoppins = Poppins({
-  variable: "--font-geist-sans",
+  variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
