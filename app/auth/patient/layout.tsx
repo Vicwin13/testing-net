@@ -14,7 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={"font-sans antialiased bg-gray-50"}>
+      <body className="bg-gray-50">
         <Header />
         <Sidebar />
         <main className="ml-52 pt-16 min-h-screen">
