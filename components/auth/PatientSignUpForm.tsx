@@ -79,6 +79,35 @@ export default function PatientSignUpForm() {
       <form onSubmit={handleSignUp} className="flex flex-col gap-4">
         <div className="flex flex-col">
           <label
+            htmlFor="firstname"
+            className="font-medium leading-6 font-switzer pb-2.5"
+          >
+            First Name
+          </label>
+          <input
+            type="text"
+            placeholder="John"
+            className="p-2 pl-3 rounded-[40px] bg-[#EEF4FF]"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col">
+          <label
+            htmlFor="lastname"
+            className="font-medium leading-6 font-switzer pb-2.5"
+          >
+            Last Name
+          </label>
+          <input
+            type="text"
+            placeholder="Doe"
+            className="p-2 pl-3 rounded-[40px] bg-[#EEF4FF]"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <label
             htmlFor="email"
             className="font-medium leading-6 font-switzer pb-2.5"
           >
@@ -94,6 +123,22 @@ export default function PatientSignUpForm() {
 
         <div className="flex flex-col">
           <label
+            htmlFor="nin"
+            className="font-medium leading-6 font-switzer pb-2.5"
+          >
+            NIN
+          </label>
+          <input
+            type="text"
+            placeholder="nin"
+            className="p-2 pl-3 rounded-[40px] bg-[#EEF4FF]"
+            onChange={(e) => setEmail(e.target.value)}
+            pattern="[0-9]*"
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <label
             htmlFor="password"
             className="pb-2.5 font-medium leading-6 font-switzer"
           >
@@ -103,9 +148,8 @@ export default function PatientSignUpForm() {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className={`p-2 rounded-[40px] pl-3 bg-[#EEF4FF] w-full pr-10 ${
-                passwordError ? "border-2 border-red-500" : ""
-              }`}
+              className={`p-2 rounded-[40px] pl-3 bg-[#EEF4FF] w-full pr-10 ${passwordError ? "border-2 border-red-500" : ""
+                }`}
               onChange={handlePasswordChange}
             />
             <button
@@ -134,9 +178,8 @@ export default function PatientSignUpForm() {
             <input
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm Password"
-              className={`p-2 rounded-[40px] pl-3 bg-[#EEF4FF] w-full pr-10 ${
-                confirmPasswordError ? "border-2 border-red-500" : ""
-              }`}
+              className={`p-2 rounded-[40px] pl-3 bg-[#EEF4FF] w-full pr-10 ${confirmPasswordError ? "border-2 border-red-500" : ""
+                }`}
               onChange={handleConfirmPasswordChange}
             />
             <button
