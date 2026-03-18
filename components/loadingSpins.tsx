@@ -15,18 +15,18 @@ export default function SpinnerBaseSquareHorizontal() {
         <desc id="desc-08a">Some desc</desc>
         <path
           d="M7 8H3V16H7V8Z"
-          className="animate animate-bounce fill-emerald-500 "
+          className="animate animate-bounce fill-white "
         />
         <path
           d="M14 8H10V16H14V8Z"
-          className="animate animate-bounce fill-emerald-500 [animation-delay:.2s]"
+          className="animate animate-bounce fill-white [animation-delay:.2s]"
         />
         <path
           d="M21 8H17V16H21V8Z"
-          className="animate animate-bounce fill-emerald-500 [animation-delay:.4s]"
+          className="animate animate-bounce fill-white [animation-delay:.4s]"
         />
       </svg>
       {/*<!-- End Square horizontal base sized spinner --> */}
     </>
-  )
+  );
 }

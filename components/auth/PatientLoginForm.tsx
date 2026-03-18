@@ -1,6 +1,7 @@
 import { Eye, EyeOff } from "lucide-react";
 
 import React from "react";
+import SpinnerBaseSquareHorizontal from "@/components/loadingSpins";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -14,6 +15,7 @@ export default function PatientLoginForm() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const validatePassword = (value: string) => {
     if (value.length > 0 && value.length < 8) {
@@ -35,12 +37,15 @@ export default function PatientLoginForm() {
       setPasswordError("Password must be at least 8 characters");
       return;
     }
+    setIsLoading(true);
     try {
       await signIn(email, password);
       toast.success("Login successful!");
-      router.push("/dashboard");
+      router.push("/dashboard/patient");
     } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : "Login failed");
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -92,8 +97,19 @@ export default function PatientLoginForm() {
           )}
         </div>
 
-        <button className="bg-(--main-color) text-white py-2.5 rounded-[40px] mt-7.5">
-          Login
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="bg-(--main-color) cursor-pointer text-white py-2.5 rounded-[40px] mt-7.5 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+        >
+          {isLoading ? (
+            <>
+              <SpinnerBaseSquareHorizontal />
+              <span>Logging in...</span>
+            </>
+          ) : (
+            "Login"
+          )}
         </button>
       </form>
     </>

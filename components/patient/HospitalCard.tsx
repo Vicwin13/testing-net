@@ -10,7 +10,7 @@ export default function HospitalCard({ hospital }: HospitalCardProps) {
   const { id, name, location, distance, rating, specialties, extraCount, fee, image } = hospital;
 
   return (
-    <Link href={`/auth/patient/hospitals/${id}`} className="block group">
+    <Link href={`/dashboard/patient/hospitals/${id}`} className="block group">
       <div className="min-w-5xl flex gap-4 bg-white border border-gray-200 rounded-2xl p-4 group-hover:border-blue-200 group-hover:shadow-md transition-all">
         {/* Image */}
         <div className="relative shrink-0 w-36 h-28 rounded-xl overflow-hidden bg-gray-100">

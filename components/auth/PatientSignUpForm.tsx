@@ -1,6 +1,7 @@
 import { Eye, EyeOff } from "lucide-react";
 
 import React from "react";
+import SpinnerBaseSquareHorizontal from "@/components/loadingSpins";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -10,6 +11,8 @@ export default function PatientSignUpForm() {
   const { signUp } = useAuth();
   const router = useRouter();
 
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -17,6 +20,7 @@ export default function PatientSignUpForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const validatePassword = (value: string) => {
     if (value.length > 0 && value.length < 8) {
@@ -64,46 +68,56 @@ export default function PatientSignUpForm() {
       setConfirmPasswordError("Passwords do not match");
       return;
     }
+    setIsLoading(true);
     try {
-      await signUp(email, password, { role: "patient" });
+      await signUp(email, password, {
+        role: "patient",
+        firstName,
+        lastName,
+      });
       toast.success(
-        "Sign up successful! Please check your email to verify your account.",
+        "Sign up successful! Please check your email to verify your account and the. login",
       );
-      router.push("/login");
+      router.push("/");
     } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : "Sign up failed");
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
     <>
-      <form onSubmit={handleSignUp} className="flex flex-col gap-4">
-        <div className="flex flex-col">
-          <label
-            htmlFor="firstname"
-            className="font-medium leading-6 font-switzer pb-2.5"
-          >
-            First Name
-          </label>
-          <input
-            type="text"
-            placeholder="John"
-            className="p-2 pl-3 rounded-[40px] bg-[#EEF4FF]"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label
-            htmlFor="lastname"
-            className="font-medium leading-6 font-switzer pb-2.5"
-          >
-            Last Name
-          </label>
-          <input
-            type="text"
-            placeholder="Doe"
-            className="p-2 pl-3 rounded-[40px] bg-[#EEF4FF]"
-            onChange={(e) => setEmail(e.target.value)}
-          />
+      <form onSubmit={handleSignUp} className="flex  flex-col gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col flex-1">
+            <label
+              htmlFor="firstname"
+              className="font-medium leading-6 font-switzer pb-2.5"
+            >
+              First Name
+            </label>
+            <input
+              type="text"
+              placeholder="John"
+              className="p-2 pl-3 w-full rounded-[40px] bg-[#EEF4FF]"
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col flex-1">
+            <label
+              htmlFor="lastname"
+              className="font-medium leading-6 font-switzer pb-2.5"
+            >
+              Last Name
+            </label>
+            <input
+              type="text"
+              placeholder="Doe"
+              className="p-2 pl-3 w-full rounded-[40px] bg-[#EEF4FF]"
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col">
@@ -123,22 +137,6 @@ export default function PatientSignUpForm() {
 
         <div className="flex flex-col">
           <label
-            htmlFor="nin"
-            className="font-medium leading-6 font-switzer pb-2.5"
-          >
-            NIN
-          </label>
-          <input
-            type="text"
-            placeholder="nin"
-            className="p-2 pl-3 rounded-[40px] bg-[#EEF4FF]"
-            onChange={(e) => setEmail(e.target.value)}
-            pattern="[0-9]*"
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label
             htmlFor="password"
             className="pb-2.5 font-medium leading-6 font-switzer"
           >
@@ -148,8 +146,9 @@ export default function PatientSignUpForm() {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className={`p-2 rounded-[40px] pl-3 bg-[#EEF4FF] w-full pr-10 ${passwordError ? "border-2 border-red-500" : ""
-                }`}
+              className={`p-2 rounded-[40px] pl-3 bg-[#EEF4FF] w-full pr-10 ${
+                passwordError ? "border-2 border-red-500" : ""
+              }`}
               onChange={handlePasswordChange}
             />
             <button
@@ -178,8 +177,9 @@ export default function PatientSignUpForm() {
             <input
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm Password"
-              className={`p-2 rounded-[40px] pl-3 bg-[#EEF4FF] w-full pr-10 ${confirmPasswordError ? "border-2 border-red-500" : ""
-                }`}
+              className={`p-2 rounded-[40px] pl-3 bg-[#EEF4FF] w-full pr-10 ${
+                confirmPasswordError ? "border-2 border-red-500" : ""
+              }`}
               onChange={handleConfirmPasswordChange}
             />
             <button
@@ -197,8 +197,19 @@ export default function PatientSignUpForm() {
           )}
         </div>
 
-        <button className="bg-(--main-color) text-white py-2.5 rounded-[40px] mt-7.5">
-          Register
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="bg-(--main-color) cursor-pointer text-white py-2.5 rounded-[40px] mt-7.5 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+        >
+          {isLoading ? (
+            <>
+              <SpinnerBaseSquareHorizontal />
+              <span>Registering...</span>
+            </>
+          ) : (
+            "Register"
+          )}
         </button>
       </form>
     </>
