@@ -1,6 +1,7 @@
 import { Eye, EyeOff } from "lucide-react";
 
 import React from "react";
+import SpinnerBaseSquareHorizontal from "@/components/loadingSpins";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -13,15 +14,38 @@ export default function PatientLoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const validatePassword = (value: string) => {
+    if (value.length > 0 && value.length < 8) {
+      setPasswordError("Password must be at least 8 characters");
+    } else {
+      setPasswordError("");
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    validatePassword(value);
+  };
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters");
+      return;
+    }
+    setIsLoading(true);
     try {
       await signIn(email, password);
       toast.success("Login successful!");
-      router.push("/dashboard");
+      router.push("/dashboard/patient");
     } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : "Login failed");
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -53,8 +77,10 @@ export default function PatientLoginForm() {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="p-2 rounded-[40px] pl-3 bg-[#EEF4FF] w-full pr-10"
-              onChange={(e) => setPassword(e.target.value)}
+              className={`p-2 rounded-[40px] pl-3 bg-[#EEF4FF] w-full pr-10 ${
+                passwordError ? "border-2 border-red-500" : ""
+              }`}
+              onChange={handlePasswordChange}
             />
             <button
               type="button"
@@ -64,13 +90,26 @@ export default function PatientLoginForm() {
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
-          <span className="text-[#6B6B6B] text-sm mt-2.5 font-switzer">
-            Must be at least 8 characters
-          </span>
+          {passwordError && (
+            <span className="text-red-500 text-sm mt-2.5 font-switzer">
+              {passwordError}
+            </span>
+          )}
         </div>
 
-        <button className="bg-(--main-color) text-white py-2.5 rounded-[40px] mt-7.5">
-          Login
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="bg-(--main-color) cursor-pointer text-white py-2.5 rounded-[40px] mt-7.5 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+        >
+          {isLoading ? (
+            <>
+              <SpinnerBaseSquareHorizontal />
+              <span>Logging in...</span>
+            </>
+          ) : (
+            "Login"
+          )}
         </button>
       </form>
     </>
